@@ -1,10 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as AppAuth from 'expo-app-auth';
+import { SPOTIFY_CLIENT_ID, REDIRECT_URI } from 'react-native-dotenv'
 
 const authenticate = async (navigation) => {
     const config = {
         issuer: "https://accounts.spotify.com",
-        clientId: "47009a867cb8474a8d97be774648e8d0",
+        clientId: SPOTIFY_CLIENT_ID,
         scopes: [
             "user-read-email",
             "user-library-read",
@@ -15,7 +16,7 @@ const authenticate = async (navigation) => {
             "playlist-read-collaborative",
             "playlist-modify-public"
         ],
-        redirectUrl: "exp://localhost:19002/--/spotify-auth-callback"
+        redirectUrl: REDIRECT_URI,
     };
 
     const result = await AppAuth.authAsync(config);
