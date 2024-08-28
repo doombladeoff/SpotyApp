@@ -1,7 +1,7 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { getFollowedArtists, getPlaylists, getProfile } from "../../utils";
+import { getFollowedArtists, getPlaylists, getProfile, getUserSavedAlbums } from "../../utils";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { ProfileItems } from "../../components/ProfileItems";
@@ -11,17 +11,20 @@ const ProfileScreen = () => {
     const [userProfile, setUserProfile] = useState(null);
     const [playlists, setPlaylists] = useState([]);
     const [followedArtists, setFollowedArtists] = useState([]);
+    const [followedAlbums, setFollowedAlbums] = useState([]);
 
     const fetchData = async () => {
         try {
-            const [profile, playlists, followedArt] = await Promise.all([
+            const [profile, playlists, followedArt, followedAlb] = await Promise.all([
                 getProfile(),
                 getPlaylists(),
-                getFollowedArtists()
+                getFollowedArtists(),
+                getUserSavedAlbums()
             ]);
             setUserProfile(profile);
             setPlaylists(playlists);
             setFollowedArtists(followedArt?.artists?.items);
+            setFollowedAlbums(followedAlb?.items);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -69,6 +72,7 @@ const ProfileScreen = () => {
                         <Text style={{ color: "white", fontSize: 13, fontWeight: "bold" }}>Liked Songs</Text>
                     </Pressable>
                     <ProfileItems data={playlists} type="playlist"/>
+                    <ProfileItems data={followedAlbums} type="album"/>
                     <ProfileItems data={followedArtists} type="artist"/>
                 </View>
             </ScrollView>

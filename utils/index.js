@@ -15,6 +15,7 @@ import { roundedFollowers } from "./roundedFollowers";
 import { formatTimeProgressBar } from "./formatTimeProgressBar";
 
 import { getFollowedArtists } from "./User/getFollowedArtists";
+import { getUserSavedAlbums } from "./User/getUserSavedAlbums";
 
 export {
     getProfile,
@@ -30,5 +31,6 @@ export {
     getAlbumTracks,
     roundedFollowers,
     formatTimeProgressBar,
-    getFollowedArtists
+    getFollowedArtists,
+    getUserSavedAlbums
 }
