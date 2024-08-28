@@ -2,14 +2,13 @@ import {
     ActivityIndicator,
     FlatList,
     Image,
-    Pressable,
+    Pressable, SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
     View,
 } from "react-native";
 import { useState, useEffect, useContext, useRef } from "react";
-import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons, AntDesign, Feather, Entypo } from "@expo/vector-icons";
 import SongItem from "../../components/SongItem";
@@ -17,20 +16,14 @@ import { Player } from "../../PlayerContext";
 
 import { Audio } from "expo-av";
 import { debounce } from "lodash";
-import { BottomModal, ModalContent } from "react-native-modals/src";
+import { ModalContent, BottomModal } from 'react-native-modals';
 import { formatTimeProgressBar, getSavedTracks } from "../../utils";
 import SearchBar from "../../components/ui/SearchBar";
 import ProgressBar from "../../components/ui/ProgressBar";
 import ControlButtons from "../../components/ui/ControlButtons";
 
 const LikedSongsScreen = () => {
-    const colors = [
-        "#27374D", "#1D267D", "#BE5A83", "#212A3E", "#917FB3",
-        "#37306B", "#443C68", "#5B8FB9", "#144272"
-    ];
-
     const navigation = useNavigation();
-    const [backgroundColor, setBackgroundColor] = useState("#0A2647");
     const { currentTrack, setCurrentTrack } = useContext(Player);
     const [modalVisible, setModalVisible] = useState(false);
     const [searchedTracks, setSearchedTracks] = useState([]);
@@ -43,6 +36,8 @@ const LikedSongsScreen = () => {
     const [totalDuration, setTotalDuration] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const value = useRef(0);
+    const [trackLimit, setTrackLimit] = useState(10);
+
 
     useEffect(() => {
         fetchSavedTracks();
@@ -69,9 +64,15 @@ const LikedSongsScreen = () => {
 
     const play = async (nextTrack) => {
         const preview_url = nextTrack?.track?.preview_url;
+        if (!preview_url) {
+            console.log("Preview URL is not available");
+            return;
+        }
+
         try {
             if (currentSound) {
                 await currentSound.stopAsync();
+                await currentSound.unloadAsync();
             }
             await Audio.setAudioModeAsync({
                 playsInSilentModeIOS: true,
@@ -140,7 +141,6 @@ const LikedSongsScreen = () => {
         if (value.current < savedTracks.length) {
             const nextTrack = savedTracks[value.current];
             setCurrentTrack(nextTrack);
-            await extractColors();
             await play(nextTrack);
         } else {
             console.log("end of playlist");
@@ -162,16 +162,10 @@ const LikedSongsScreen = () => {
         }
     };
 
-    const extractColors = async () => {
-        const randomIndex = Math.floor(Math.random() * colors.length);
-        const randomColor = colors[randomIndex];
-        setBackgroundColor(randomColor);
-    };
-
     return (
         <>
-            <LinearGradient colors={["#614385", "#516395"]} style={{ flex: 1 }}>
-                <ScrollView style={{ flex: 1, marginTop: 50 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+                <ScrollView style={{ flex: 1, marginBottom: currentTrack ? 100 : 50 }}>
                     <Pressable
                         onPress={() => navigation.goBack()}
                         style={{ marginHorizontal: 10 }}
@@ -213,7 +207,7 @@ const LikedSongsScreen = () => {
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             scrollEnabled={false}
-                            data={searchedTracks}
+                            data={searchedTracks.slice(0, trackLimit)}
                             renderItem={({ item }) => (
                                 <SongItem
                                     item={item}
@@ -221,11 +215,20 @@ const LikedSongsScreen = () => {
                                     isPlaying={item === currentTrack}
                                 />
                             )}
+                            onEndReached={() => {
+                                if (trackLimit < searchedTracks.length) {
+                                    setTrackLimit((prevLimit) => prevLimit + 10);
+                                }
+                            }}
+                            onEndReachedThreshold={1}
+                            ListFooterComponent={
+                                trackLimit < searchedTracks.length ?
+                                    <ActivityIndicator size="large" color="gray"/> : null
+                            }
                         />
                     )}
                 </ScrollView>
-            </LinearGradient>
-
+            </SafeAreaView>
             {currentTrack && (
                 <Pressable
                     onPress={() => setModalVisible(!modalVisible)}
@@ -249,14 +252,13 @@ const LikedSongsScreen = () => {
                     </View>
                 </Pressable>
             )}
-
             <BottomModal
                 visible={modalVisible}
                 onHardwareBackPress={() => setModalVisible(false)}
                 swipeDirection={["up", "down"]}
                 swipeThreshold={200}
             >
-                <ModalContent style={{ height: "100%", width: "100%", backgroundColor: backgroundColor }}>
+                <ModalContent style={{ height: "100%", width: "100%", backgroundColor: '#0A2647' }}>
                     <View style={{ height: "100%", width: "100%", marginTop: 40 }}>
                         <Pressable style={styles.modalHeaderContainer}>
                             <AntDesign
@@ -317,7 +319,7 @@ const styles = StyleSheet.create({
     },
     sortButton: {
         marginHorizontal: 10,
-        backgroundColor: "#42275a",
+        backgroundColor: "rgba(93,93,93,0.39)",
         padding: 10,
         borderRadius: 3,
         height: 38,
@@ -345,20 +347,25 @@ const styles = StyleSheet.create({
         backgroundColor: "#1DB954",
     },
     bottomModalContainer: {
-        backgroundColor: "#5072A7",
-        width: "90%",
+        backgroundColor: "#000000",
+        width: "100%",
         padding: 10,
         marginLeft: "auto",
         marginRight: "auto",
-        marginBottom: 15,
+        marginBottom: 75,
         position: "absolute",
-        borderRadius: 6,
-        left: 20,
-        bottom: 10,
+        bottom: 0,
         justifyContent: "space-between",
         flexDirection: "row",
         alignItems: "center",
         gap: 10,
+        shadowOpacity: 2,
+        shadowRadius: 2,
+        elevation: 4,
+        shadowOffset: {
+            width: 0,
+            height: -2
+        },
     },
     bottomModalText: {
         fontSize: 13,

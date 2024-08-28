@@ -53,7 +53,7 @@ const AlbumScreen = ({ route, navigation }) => {
 
     return (
         <LinearGradient colors={["#41829f", "#040306", "#040306"]} style={{ flex: 1 }}>
-            <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16} style={{ flex: 1 }}>
+            <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16} style={{ flex: 1, marginBottom: 50 }}>
                 <Animated.Image source={{ uri: albumImage }} style={[styles.image, imageStyle]}/>
                 <FlatList
                     data={album}

@@ -89,11 +89,7 @@ const HomeScreen = () => {
                         </View>
                     </View>
 
-                    <MaterialCommunityIcons
-                        name="lightning-bolt-outline"
-                        size={24}
-                        color="white"
-                    />
+                    <MaterialCommunityIcons name="lightning-bolt-outline" size={24} color="white"/>
                 </View>
 
                 <View style={styles.categoriesContainer}>

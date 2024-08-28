@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
-
-import HomeScreen from "../screens/Home/HomeScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
+import { ProfileStack } from "./ProfileStack";
+import { MainStack } from "./HomeStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,20 +15,14 @@ const BottomTabs = () => {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                shadowOpacity: 4,
-                shadowRadius: 4,
-                elevation: 4,
-                shadowOffset: {
-                    width: 0,
-                    height: -4
-                },
                 borderTopWidth: 0
             }
         }}>
             <Tab.Screen
                 name="Home"
-                component={HomeScreen}
+                component={MainStack}
                 options={{
+                    lazy: false,
                     tabBarLabel: "Home",
                     headerShown: false,
                     tabBarLabelStyle: { color: "white" },
@@ -42,8 +36,9 @@ const BottomTabs = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={ProfileScreen}
+                component={ProfileStack}
                 options={{
+                    lazy: false,
                     tabBarLabel: "Profile",
                     headerShown: false,
                     tabBarLabelStyle: { color: "white" },

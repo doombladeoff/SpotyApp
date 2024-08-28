@@ -76,7 +76,7 @@ const ArtistScreen = ({ route, navigation }) => {
     }, [navigation]);
 
     return (
-        <LinearGradient colors={["#131624", "#040306"]} style={{ flex: 1 }}>
+        <LinearGradient colors={["#131624", "#040306"]} style={{ flex: 1, paddingBottom: 70 }}>
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16} style={{ flex: 1 }}>
                 <Animated.Image source={{ uri: artist?.images[0].url }} style={[styles.image, imageStyle]}/>
                 <View style={styles.artistNameShadow}>

@@ -1,4 +1,4 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -60,13 +60,18 @@ const SongInfoScreen = () => {
                     </View>
                 </View>
                 <View>
-                    <View style={{ marginTop: 10, marginHorizontal: 12 }}>
+                    <View style={{ marginTop: 10, marginHorizontal: 12, paddingBottom: 75 }}>
                         {tracks?.map((track, index) => (
                             <Pressable
                                 style={{ marginVertical: 10, flexDirection: "row", justifyContent: "space-between" }}>
                                 <View>
                                     <Text
-                                        style={{ fontSize: 16, fontWeight: "500", color: "white" }}>{track?.name}</Text>
+                                        style={{
+                                            fontSize: 16,
+                                            fontWeight: "500",
+                                            color: "white",
+                                            maxWidth: Dimensions.get('window').width - 50
+                                        }}>{track?.name}</Text>
                                     <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 5 }}>
                                         {track?.artists?.map((item, index) => (
                                             <Text style={{

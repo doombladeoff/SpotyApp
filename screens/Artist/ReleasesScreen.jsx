@@ -46,7 +46,7 @@ const ReleasesScreen = ({ route }) => {
     };
 
     return (
-        <View style={{ flex: 1, paddingHorizontal: 20, backgroundColor: '#131624' }}>
+        <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 70, backgroundColor: '#131624' }}>
             <FlatList
                 data={albums.sort((a, b) => new Date(b.release_date) - new Date(a.release_date))}
                 scrollEnabled={true}

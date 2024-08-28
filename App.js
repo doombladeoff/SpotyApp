@@ -1,4 +1,4 @@
-import { ModalPortal } from "react-native-modals/src";
+import { ModalPortal } from "react-native-modals";
 import { StackNavigator } from "./navigation/Stack";
 import { PlayerContext } from "./PlayerContext";
 
