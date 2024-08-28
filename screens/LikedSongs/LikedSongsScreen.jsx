@@ -247,7 +247,7 @@ const LikedSongsScreen = () => {
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
                         <AntDesign name="heart" size={24} color="#1DB954"/>
                         <Pressable onPress={handlePlayPause}>
-                            <AntDesign name="pausecircle" size={24} color="white"/>
+                            <AntDesign name={isPlaying ? "pausecircle" : "play"} size={24} color="white"/>
                         </Pressable>
                     </View>
                 </Pressable>
